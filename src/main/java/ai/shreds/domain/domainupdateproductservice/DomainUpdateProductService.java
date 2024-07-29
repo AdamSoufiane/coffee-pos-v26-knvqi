@@ -1,88 +1,70 @@
-package ai.shreds.domain; 
-  
- import ai.shreds.shared.SharedUpdateProductRequestParams; 
- import ai.shreds.shared.SharedProductResponseDTO; 
- import ai.shreds.infrastructure.InfrastructureProductRepositoryImpl; 
- import org.springframework.beans.factory.annotation.Autowired; 
- import org.springframework.stereotype.Service; 
- import org.springframework.transaction.annotation.Transactional; 
- import lombok.Data; 
- import lombok.NoArgsConstructor; 
- import lombok.AllArgsConstructor; 
- import org.slf4j.Logger; 
- import org.slf4j.LoggerFactory; 
- import java.util.Optional; 
- import java.util.UUID; 
- import java.math.BigDecimal; 
-  
- @Service 
- public class DomainUpdateProductService implements DomainProductServicePort { 
-  
-     private final DomainProductRepositoryPort repository; 
-     private static final Logger logger = LoggerFactory.getLogger(DomainUpdateProductService.class); 
-  
-     @Autowired 
-     public DomainUpdateProductService(DomainProductRepositoryPort repository) { 
-         this.repository = repository; 
-     } 
-  
-     @Override 
-     @Transactional 
-     public SharedProductResponseDTO updateProduct(UUID id, SharedUpdateProductRequestParams requestParams) { 
-         logger.info("Starting update for product with ID: {}", id); 
-         validateProductData(requestParams); 
-  
-         Optional<DomainProductEntity> optionalProduct = repository.findById(id); 
-         if (optionalProduct.isEmpty()) { 
-             logger.error("Product not found with ID: {}", id); 
-             throw new IllegalArgumentException("Product not found"); 
-         } 
-  
-         DomainProductEntity product = optionalProduct.get(); 
-         product.setName(requestParams.getName()); 
-         product.setDescription(requestParams.getDescription()); 
-         product.setPrice(requestParams.getPrice()); 
-         product.setAvailability(requestParams.getAvailability()); 
-  
-         repository.save(product); 
-         logger.info("Product updated successfully with ID: {}", id); 
-  
-         return mapToSharedProductResponseDTO(product); 
-     } 
-  
-     private void validateProductData(SharedUpdateProductRequestParams requestParams) { 
-         if (requestParams.getName() == null || requestParams.getName().isEmpty()) { 
-             throw new IllegalArgumentException("Product name must not be empty"); 
-         } 
-         if (requestParams.getPrice() == null || requestParams.getPrice().compareTo(BigDecimal.ZERO) <= 0) { 
-             throw new IllegalArgumentException("Product price must be positive"); 
-         } 
-         if (requestParams.getAvailability() == null) { 
-             throw new IllegalArgumentException("Product availability must be specified"); 
-         } 
-         if (repository.findByName(requestParams.getName()).isPresent()) { 
-             throw new IllegalArgumentException("Product name must be unique"); 
-         } 
-     } 
-  
-     private SharedProductResponseDTO mapToSharedProductResponseDTO(DomainProductEntity product) { 
-         return new SharedProductResponseDTO( 
-                 product.getId(), 
-                 product.getName(), 
-                 product.getDescription(), 
-                 product.getPrice(), 
-                 product.getAvailability() 
-         ); 
-     } 
- } 
-  
- @Data 
- @NoArgsConstructor 
- @AllArgsConstructor 
- class DomainProductEntity { 
-     private UUID id; 
-     private String name; 
-     private String description; 
-     private BigDecimal price; 
-     private Boolean availability; 
- }
+package ai.shreds.domain;
+
+import ai.shreds.shared.SharedUpdateProductRequestParams;
+import ai.shreds.shared.SharedProductResponseDTO;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import java.util.Optional;
+import java.util.UUID;
+import java.math.BigDecimal;
+
+@Service
+public class DomainUpdateProductService implements DomainProductServicePort {
+
+    private final DomainProductRepositoryPort repository;
+    private static final Logger logger = LoggerFactory.getLogger(DomainUpdateProductService.class);
+
+    @Autowired
+    public DomainUpdateProductService(DomainProductRepositoryPort repository) {
+        this.repository = repository;
+    }
+
+    @Override
+    @Transactional
+    public SharedProductResponseDTO updateProduct(UUID id, SharedUpdateProductRequestParams requestParams) {
+        logger.info("Starting update for product with ID: {}", id);
+        validateProductData(requestParams);
+
+        Optional<DomainProductEntity> optionalProduct = repository.findById(id);
+        if (optionalProduct.isEmpty()) {
+            logger.error("Product not found with ID: {}", id);
+            throw new IllegalArgumentException("Product not found");
+        }
+
+        DomainProductEntity product = optionalProduct.get();
+        product.setName(requestParams.getName());
+        product.setDescription(requestParams.getDescription());
+        product.setPrice(requestParams.getPrice());
+        product.setAvailability(requestParams.getAvailability());
+
+        repository.save(product);
+        logger.info("Product updated successfully with ID: {}", id);
+
+        return mapToSharedProductResponseDTO(product);
+    }
+
+    private void validateProductData(SharedUpdateProductRequestParams requestParams) {
+        if (requestParams.getName() == null || requestParams.getName().isEmpty()) {
+            throw new IllegalArgumentException("Product name must not be empty");
+        }
+        if (requestParams.getPrice() == null || requestParams.getPrice().compareTo(BigDecimal.ZERO) <= 0) {
+            throw new IllegalArgumentException("Product price must be positive");
+        }
+        if (requestParams.getAvailability() == null) {
+            throw new IllegalArgumentException("Product availability must be specified");
+        }
+    }
+
+    private SharedProductResponseDTO mapToSharedProductResponseDTO(DomainProductEntity product) {
+        return new SharedProductResponseDTO(
+                product.getId(),
+                product.getName(),
+                product.getDescription(),
+                product.getPrice(),
+                product.getAvailability()
+        );
+    }
+}
