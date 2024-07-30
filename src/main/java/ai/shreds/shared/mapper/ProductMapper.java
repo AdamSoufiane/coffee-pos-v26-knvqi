@@ -1,8 +1,8 @@
 package ai.shreds.shared.mapper;
 
-import ai.shreds.domain.DomainProductEntity;
-import ai.shreds.shared.SharedCreateProductRequestParams;
-import ai.shreds.shared.SharedProductResponseDTO;
+import ai.shreds.domain.model.DomainProductEntity;
+import ai.shreds.shared.dto.SharedCreateProductRequestParams;
+import ai.shreds.shared.dto.SharedProductResponseDTO;
 import java.util.UUID;
 
 public class ProductMapper {
