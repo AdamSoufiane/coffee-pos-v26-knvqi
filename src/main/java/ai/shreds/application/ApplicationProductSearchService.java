@@ -1,22 +1,21 @@
 package ai.shreds.application;
 
 import ai.shreds.adapter.AdapterProductResponseDTO;
+import ai.shreds.application.ApplicationProductSearchServiceInputPort;
 import ai.shreds.domain.DomainProductEntity;
 import ai.shreds.domain.DomainProductSearchService;
+import javax.validation.constraints.Size;
 import lombok.RequiredArgsConstructor;
 import org.mapstruct.Mapper;
 import org.mapstruct.factory.Mappers;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
-
 import java.util.List;
 import java.util.stream.Collectors;
 
-@RequiredArgsConstructor
 @Service
+@RequiredArgsConstructor
 public class ApplicationProductSearchService implements ApplicationProductSearchServiceInputPort {
 
     private static final Logger logger = LoggerFactory.getLogger(ApplicationProductSearchService.class);
@@ -24,11 +23,10 @@ public class ApplicationProductSearchService implements ApplicationProductSearch
     private final ProductMapper productMapper = Mappers.getMapper(ProductMapper.class);
 
     @Override
-    public List<AdapterProductResponseDTO> searchByName(String name) {
+    public List<AdapterProductResponseDTO> searchByName(@Size(min = 1) String name) {
         validateQueryParameter(name, "name");
         try {
             logger.info("Searching products by name: {}", name);
-            Pageable pageable = PageRequest.of(0, 10); // Example: first page with 10 items per page
             List<DomainProductEntity> products = domainProductSearchService.searchProductsByName(name);
             return products.stream()
                     .map(productMapper::toAdapterProductResponseDTO)
@@ -40,11 +38,10 @@ public class ApplicationProductSearchService implements ApplicationProductSearch
     }
 
     @Override
-    public List<AdapterProductResponseDTO> searchByDescription(String description) {
+    public List<AdapterProductResponseDTO> searchByDescription(@Size(min = 1) String description) {
         validateQueryParameter(description, "description");
         try {
             logger.info("Searching products by description: {}", description);
-            Pageable pageable = PageRequest.of(0, 10); // Example: first page with 10 items per page
             List<DomainProductEntity> products = domainProductSearchService.searchProductsByDescription(description);
             return products.stream()
                     .map(productMapper::toAdapterProductResponseDTO)
@@ -56,11 +53,10 @@ public class ApplicationProductSearchService implements ApplicationProductSearch
     }
 
     @Override
-    public List<AdapterProductResponseDTO> searchByCategory(String category) {
+    public List<AdapterProductResponseDTO> searchByCategory(@Size(min = 1) String category) {
         validateQueryParameter(category, "category");
         try {
             logger.info("Searching products by category: {}", category);
-            Pageable pageable = PageRequest.of(0, 10); // Example: first page with 10 items per page
             List<DomainProductEntity> products = domainProductSearchService.searchProductsByCategory(category);
             return products.stream()
                     .map(productMapper::toAdapterProductResponseDTO)

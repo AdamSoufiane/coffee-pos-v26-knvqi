@@ -1,13 +1,14 @@
 package ai.shreds.domain;
 
-import ai.shreds.shared.domain.DomainProductEntity;
-import ai.shreds.shared.domain.DomainCategoryEntity;
-import ai.shreds.shared.domain.DomainProductRepositoryPort;
-import ai.shreds.shared.domain.DomainCategoryRepositoryPort;
+import ai.shreds.domain.DomainProductEntity;
+import ai.shreds.domain.DomainCategoryEntity;
+import ai.shreds.domain.DomainProductRepositoryPort;
+import ai.shreds.domain.DomainCategoryRepositoryPort;
 import org.springframework.stereotype.Service;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import java.util.List;
+import java.util.UUID;
 
 @Slf4j
 @Service

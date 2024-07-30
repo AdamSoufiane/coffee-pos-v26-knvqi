@@ -1,7 +1,7 @@
 package ai.shreds.adapter;
 
 import ai.shreds.application.ApplicationProductSearchServiceInputPort;
-import ai.shreds.shared.AdapterProductResponseDTO;
+import ai.shreds.adapter.AdapterProductResponseDTO;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -40,7 +40,7 @@ public class AdapterProductController {
 
     @GetMapping("/search/category")
     public ResponseEntity<List<AdapterProductResponseDTO>> searchProductsByCategory(@RequestParam String category) {
-        if (category == null || category.isEmpty()) {
+        if (category == null || category isEmpty()) {
             throw new IllegalArgumentException("Category parameter is required");
         }
         List<AdapterProductResponseDTO> products = productSearchService.searchByCategory(category);

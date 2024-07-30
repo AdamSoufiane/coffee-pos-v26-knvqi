@@ -1,7 +1,6 @@
 package ai.shreds.domain;
 
 import java.util.List;
-import ai.shreds.domain.DomainProductEntity;
 
 /**
  * DomainProductRepositoryPort defines the contract for the product repository in the domain layer.
