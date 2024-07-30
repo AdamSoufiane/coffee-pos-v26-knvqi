@@ -9,6 +9,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import java.util.List;
 import java.util.UUID;
+import java.util.Optional;
 
 @Slf4j
 @Service
@@ -32,12 +33,12 @@ public class DomainProductSearchService {
     public List<DomainProductEntity> searchProductsByCategory(String category) {
         validateInput(category);
         log.info("Searching products by category: {}", category);
-        DomainCategoryEntity categoryEntity = categoryRepository.findByNameIgnoreCase(category);
-        if (categoryEntity == null) {
+        Optional<DomainCategoryEntity> categoryEntity = categoryRepository.findByNameIgnoreCase(category);
+        if (!categoryEntity.isPresent()) {
             log.warn("Category not found: {}", category);
             throw new IllegalArgumentException("Category not found");
         }
-        return productRepository.findByCategoryNameIgnoreCase(categoryEntity.getName());
+        return productRepository.findByCategoryNameIgnoreCase(categoryEntity.get().getName());
     }
 
     private void validateInput(String input) {

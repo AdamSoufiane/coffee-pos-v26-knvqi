@@ -40,7 +40,7 @@ public class AdapterProductController {
 
     @GetMapping("/search/category")
     public ResponseEntity<List<AdapterProductResponseDTO>> searchProductsByCategory(@RequestParam String category) {
-        if (category == null || category isEmpty()) {
+        if (category == null || category.isEmpty()) {
             throw new IllegalArgumentException("Category parameter is required");
         }
         List<AdapterProductResponseDTO> products = productSearchService.searchByCategory(category);
