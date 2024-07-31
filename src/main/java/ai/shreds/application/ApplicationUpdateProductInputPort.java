@@ -17,5 +17,6 @@ public interface ApplicationUpdateProductInputPort {
      */
     ApplicationSharedProductDTO updateProduct(UUID id, ApplicationSharedProductDTO params) throws Exception;
 
-    // Add relevant exception handling methods if required
+    // Add relevant exception handling methods
 }
+// Implementation Note: Use Lombok annotations for getters and setters in the implementing classes.

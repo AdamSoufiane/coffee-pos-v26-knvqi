@@ -11,16 +11,16 @@ import lombok.Data;
 @ControllerAdvice
 public class AdapterProductControllerException {
 
-    @ExceptionHandler(Exception.class)
-    public ResponseEntity<Error> handleException(Exception exception, WebRequest request) {
-        Error errorResponse = new Error("Error occurred", exception.getMessage());
-        return new ResponseEntity<>(errorResponse, HttpStatus.INTERNAL_SERVER_ERROR);
-    }
-
     @Data
     @AllArgsConstructor
     public static class Error {
         private String message;
         private String error;
+    }
+
+    @ExceptionHandler(Exception.class)
+    public ResponseEntity<Error> handleException(Exception exception, WebRequest request) {
+        Error errorResponse = new Error("Error occurred", exception.getMessage());
+        return new ResponseEntity<>(errorResponse, HttpStatus.INTERNAL_SERVER_ERROR);
     }
 }

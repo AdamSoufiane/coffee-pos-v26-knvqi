@@ -33,10 +33,11 @@ public class DomainCategoryMapper {
         if (dto == null) {
             return null;
         }
-        DomainCategoryEntity category = new DomainCategoryEntity();
-        category.setId(dto.getId().getValue());
-        category.setName(dto.getName().getValue());
-        category.setDescription(dto.getDescription().getValue());
+        DomainCategoryEntity category = new DomainCategoryEntity(
+                new SharedUUIDValueObject(dto.getId()),
+                new SharedStringValueObject(dto.getName()),
+                new SharedStringValueObject(dto.getDescription())
+        );
         return category;
     }
 }

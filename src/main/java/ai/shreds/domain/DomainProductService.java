@@ -2,16 +2,14 @@ package ai.shreds.domain;
 
 import ai.shreds.domain.DomainProductEntity;
 import ai.shreds.domain.DomainProductRepositoryPort;
-import ai.shreds.domain.DomainProductMapper;
 import ai.shreds.domain.DomainCategoryRepositoryPort;
-import java.math.BigDecimal;
-import java.util.Optional;
-import java.util.UUID;
-import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Size;
+import ai.shreds.domain.DomainProductMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.Optional;
+import java.util.UUID;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -78,16 +76,11 @@ public class DomainProductService {
      *
      * @param product The product entity to be validated.
      */
-    private void validateProductData(@NotNull(message = "Product cannot be null") DomainProductEntity product) {
+    private void validateProductData(DomainProductEntity product) {
         // Validate product name uniqueness
         Optional<DomainProductEntity> existingProduct = productRepository.findById(product.getId());
         if (existingProduct.isPresent() && !existingProduct.get().getId().equals(product.getId())) {
             throw new IllegalArgumentException("Product name must be unique within the catalogue.");
-        }
-
-        // Validate product name format
-        if (!product.getName().matches("^[a-zA-Z0-9 ]+$")) {
-            throw new IllegalArgumentException("Product name must only contain letters, numbers, and spaces.");
         }
 
         // Validate product price

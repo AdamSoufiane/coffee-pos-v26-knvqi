@@ -29,7 +29,7 @@ public class ApplicationProductService implements ApplicationCreateProductInputP
     @Override
     @Transactional
     public ApplicationSharedProductDTO createProduct(ApplicationSharedProductDTO params) {
-        if (!validateCategoryExists(params.getCategory_id())) {
+        if (!validateCategoryExists(params.getCategoryId())) {
             throw new IllegalArgumentException("Category ID does not exist.");
         }
         if (productRepository.findByName(params.getName()).isPresent()) {
@@ -47,7 +47,7 @@ public class ApplicationProductService implements ApplicationCreateProductInputP
     @Override
     @Transactional
     public ApplicationSharedProductDTO updateProduct(UUID id, ApplicationSharedProductDTO params) {
-        if (!validateCategoryExists(params.getCategory_id())) {
+        if (!validateCategoryExists(params.getCategoryId())) {
             throw new IllegalArgumentException("Category ID does not exist.");
         }
         DomainProductEntity existingProduct = productRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("Product not found."));
@@ -61,7 +61,7 @@ public class ApplicationProductService implements ApplicationCreateProductInputP
         existingProduct.setDescription(params.getDescription());
         existingProduct.setPrice(params.getPrice());
         existingProduct.setAvailability(params.getAvailability());
-        existingProduct.setCategoryId(params.getCategory_id());
+        existingProduct.setCategoryId(params.getCategoryId());
         DomainProductEntity updatedEntity = productRepository.save(existingProduct);
         logger.info("Product updated: {}", updatedEntity);
         return productMapper.toSharedDTO(updatedEntity);

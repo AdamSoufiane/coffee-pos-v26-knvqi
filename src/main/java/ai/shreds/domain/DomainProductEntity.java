@@ -1,22 +1,20 @@
 package ai.shreds.domain;
 
 import ai.shreds.application.ApplicationSharedProductDTO;
-import ai.shreds.shared.SharedUUIDValueObject;
-import ai.shreds.shared.SharedStringValueObject;
-import ai.shreds.shared.SharedDecimalValueObject;
-import ai.shreds.shared.SharedBooleanValueObject;
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.Column;
-import javax.persistence.Table;
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Size;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Id;
+import javax.persistence.Table;
+import javax.validation.constraints.DecimalMax;
+import javax.validation.constraints.DecimalMin;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 import java.math.BigDecimal;
 import java.util.UUID;
 
@@ -31,26 +29,28 @@ public class DomainProductEntity {
     @Id
     private UUID id;
 
+    @NotNull(message = "Name cannot be null")
+    @Size(min = 1, max = 100, message = "Name must be between 1 and 100 characters")
     @Column(name = "name", nullable = false, unique = true)
-    @NotBlank(message = "Name cannot be blank.")
-    @Size(min = 1, max = 100, message = "Name must be between 1 and 100 characters.")
     private String name;
 
+    @NotNull(message = "Description cannot be null")
+    @Size(min = 1, max = 255, message = "Description must be between 1 and 255 characters")
     @Column(name = "description", nullable = false)
-    @NotBlank(message = "Description cannot be blank.")
-    @Size(min = 1, max = 500, message = "Description must be between 1 and 500 characters.")
     private String description;
 
+    @NotNull(message = "Price cannot be null")
+    @DecimalMin(value = "0.01", message = "Price must be greater than 0")
+    @DecimalMax(value = "99999999.99", message = "Price cannot be greater than 99999999.99")
     @Column(name = "price", nullable = false)
-    @NotNull(message = "Price cannot be null.")
     private BigDecimal price;
 
+    @NotNull(message = "Availability cannot be null")
     @Column(name = "availability", nullable = false)
-    @NotNull(message = "Availability cannot be null.")
     private Boolean availability;
 
+    @NotNull(message = "Category ID cannot be null")
     @Column(name = "category_id", nullable = false)
-    @NotNull(message = "Category ID cannot be null.")
     private UUID categoryId;
 
     public ApplicationSharedProductDTO toSharedProductDTO() {
@@ -75,15 +75,7 @@ public class DomainProductEntity {
                 .build();
     }
 
-    public void validateProductData(DomainProductRepositoryPort productRepository, DomainCategoryRepositoryPort categoryRepository) {
-        if (productRepository.existsByName(this.name)) {
-            throw new IllegalArgumentException("Product name must be unique.");
-        }
-        if (this.price.compareTo(BigDecimal.ZERO) <= 0) {
-            throw new IllegalArgumentException("Product price must be a positive value.");
-        }
-        if (!categoryRepository.existsById(this.categoryId)) {
-            throw new IllegalArgumentException("Category ID must exist in the database.");
-        }
+    public void validateProductData() {
+        // Validation is now handled by the annotations
     }
 }
