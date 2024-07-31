@@ -26,10 +26,6 @@
             <id>central</id>
             <url>https://repo.maven.apache.org/maven2</url>
         </repository>
-        <repository>
-            <id>shreds-repo</id>
-            <url>https://correct-repo-url.com/maven2</url>
-        </repository>
     </repositories>
 
     <dependencies>
@@ -75,21 +71,6 @@
             <artifactId>postgresql</artifactId>
             <version>42.2.23</version>
             <scope>runtime</scope>
-        </dependency>
-        <dependency>
-            <groupId>ai.shreds</groupId>
-            <artifactId>shared</artifactId>
-            <version>1.0.0</version>
-        </dependency>
-        <dependency>
-            <groupId>ai.shreds</groupId>
-            <artifactId>application</artifactId>
-            <version>1.0.0</version>
-        </dependency>
-        <dependency>
-            <groupId>ai.shreds</groupId>
-            <artifactId>adapter</artifactId>
-            <version>1.0.0</version>
         </dependency>
     </dependencies>
 
