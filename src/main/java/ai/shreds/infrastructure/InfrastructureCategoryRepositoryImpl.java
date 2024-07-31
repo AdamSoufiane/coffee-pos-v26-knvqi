@@ -29,18 +29,12 @@ public class InfrastructureCategoryRepositoryImpl implements DomainCategoryRepos
         try {
             return springDataCategoryRepository.findById(id);
         } catch (Exception e) {
-            handleException(e);
+            throw new InfrastructureCategoryRepositoryImplException("Error finding category by ID: " + e.getMessage(), e);
         }
-        return Optional.empty();
-    }
-
-    private void handleException(Exception e) {
-        throw new InfrastructureCategoryRepositoryImplException("Error finding category by ID: " + e.getMessage(), e);
     }
 }
 
-interface SpringDataCategoryRepository extends JpaRepository<DomainCategoryEntity, UUID> {
-}
+interface SpringDataCategoryRepository extends JpaRepository<DomainCategoryEntity, UUID> {}
 
 @AllArgsConstructor
 @NoArgsConstructor

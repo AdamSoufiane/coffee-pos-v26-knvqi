@@ -1,8 +1,14 @@
 package ai.shreds.application;
 
-import ai.shreds.adapter.*;
-import ai.shreds.domain.*;
-import ai.shreds.shared.*;
+import ai.shreds.adapter.AdapterCreateProductRequest;
+import ai.shreds.adapter.AdapterDeleteProductResponse;
+import ai.shreds.adapter.AdapterProductResponse;
+import ai.shreds.adapter.AdapterSyncProductRequest;
+import ai.shreds.adapter.AdapterSyncProductResponse;
+import ai.shreds.adapter.AdapterUpdateProductRequest;
+import ai.shreds.domain.DomainCategoryService;
+import ai.shreds.domain.DomainProductEntity;
+import ai.shreds.domain.DomainProductService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -78,6 +84,7 @@ public class ApplicationProductService implements ApplicationCreateProductInputP
     @Override
     public AdapterSyncProductResponse syncProduct(AdapterSyncProductRequest request) {
         try {
+            // Assuming syncProduct returns void and we only need to handle synchronization success message
             domainProductService.syncProduct(request);
             return new AdapterSyncProductResponse("Synchronization successful");
         } catch (Exception e) {

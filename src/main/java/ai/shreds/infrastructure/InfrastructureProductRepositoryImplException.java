@@ -1,6 +1,6 @@
 package ai.shreds.infrastructure;
 
-import ai.shreds.shared.AdapterErrorResponse;
+import ai.shreds.adapter.AdapterErrorResponse;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j

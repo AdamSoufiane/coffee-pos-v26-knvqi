@@ -1,19 +1,24 @@
 package ai.shreds.adapter;
 
 import ai.shreds.application.ApplicationCreateProductInputPort;
+import ai.shreds.application.ApplicationUpdateProductInputPort;
 import ai.shreds.application.ApplicationDeleteProductInputPort;
 import ai.shreds.application.ApplicationSyncProductInputPort;
-import ai.shreds.application.ApplicationUpdateProductInputPort;
-import ai.shreds.shared.*;
+import ai.shreds.adapter.AdapterCreateProductRequest;
+import ai.shreds.adapter.AdapterUpdateProductRequest;
+import ai.shreds.adapter.AdapterDeleteProductResponse;
+import ai.shreds.adapter.AdapterSyncProductRequest;
+import ai.shreds.adapter.AdapterProductResponse;
+import ai.shreds.adapter.AdapterErrorResponse;
+import ai.shreds.adapter.AdapterSyncProductResponse;
+import java.util.UUID;
+import javax.validation.Valid;
+import javax.validation.constraints.Pattern;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import javax.validation.Valid;
-import javax.validation.constraints.Pattern;
-import java.util.UUID;
-lombok.*;
 
 @RestController
 @RequestMapping("/products")
@@ -26,11 +31,10 @@ public class AdapterProductController {
     private final ApplicationDeleteProductInputPort deleteProductService;
     private final ApplicationSyncProductInputPort syncProductService;
 
-    @RequiredArgsConstructor
-    public AdapterProductController(ApplicationCreateProductInputPort createProductService, 
-                                   ApplicationUpdateProductInputPort updateProductService, 
-                                   ApplicationDeleteProductInputPort deleteProductService, 
-                                   ApplicationSyncProductInputPort syncProductService) {
+    public AdapterProductController(ApplicationCreateProductInputPort createProductService,
+                                    ApplicationUpdateProductInputPort updateProductService,
+                                    ApplicationDeleteProductInputPort deleteProductService,
+                                    ApplicationSyncProductInputPort syncProductService) {
         this.createProductService = createProductService;
         this.updateProductService = updateProductService;
         this.deleteProductService = deleteProductService;
@@ -49,7 +53,7 @@ public class AdapterProductController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<AdapterProductResponse> updateProduct(@PathVariable @Pattern(regexp = "^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$") UUID id, @Valid @RequestBody AdapterUpdateProductRequest request) {
+    public ResponseEntity<AdapterProductResponse> updateProduct(@PathVariable(value = "id") UUID id, @Valid @RequestBody AdapterUpdateProductRequest request) {
         try {
             logger.info("Updating product with ID: {}", id);
             AdapterProductResponse response = updateProductService.updateProduct(id, request);
@@ -60,7 +64,7 @@ public class AdapterProductController {
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<AdapterDeleteProductResponse> deleteProduct(@PathVariable @Pattern(regexp = "^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$") UUID id) {
+    public ResponseEntity<AdapterDeleteProductResponse> deleteProduct(@PathVariable(value = "id") UUID id) {
         try {
             logger.info("Deleting product with ID: {}", id);
             AdapterDeleteProductResponse response = deleteProductService.deleteProduct(id);
@@ -84,13 +88,12 @@ public class AdapterProductController {
     @ExceptionHandler(Exception.class)
     public ResponseEntity<AdapterErrorResponse> handleException(Exception e) {
         AdapterErrorResponse errorResponse = new AdapterErrorResponse();
-        errorResponse.setMessage("Error occurred");
+        errorResponse.setMessage("An error occurred while processing the request.");
         errorResponse.setError(e.getMessage());
         logger.error("Exception occurred: ", e);
         return new ResponseEntity<>(errorResponse, HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
-    @Data
     public static class AdapterErrorResponse {
         private String message;
         private String error;

@@ -1,6 +1,6 @@
 package ai.shreds.infrastructure;
 
-import ai.shreds.shared.AdapterErrorResponse;
+import ai.shreds.adapter.AdapterErrorResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

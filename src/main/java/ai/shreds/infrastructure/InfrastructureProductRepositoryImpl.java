@@ -30,8 +30,7 @@ public class InfrastructureProductRepositoryImpl implements DomainProductReposit
 
     @Override
     public Optional<DomainProductEntity> findById(UUID id) {
-        DomainProductEntity product = entityManager.find(DomainProductEntity.class, id);
-        return Optional.ofNullable(product);
+        return Optional.ofNullable(entityManager.find(DomainProductEntity.class, id));
     }
 
     @Override
