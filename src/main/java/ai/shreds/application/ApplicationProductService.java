@@ -1,26 +1,21 @@
 package ai.shreds.application;
 
-import ai.shreds.domain.DomainProductEntity;
-import ai.shreds.domain.DomainProductRepositoryPort;
-import ai.shreds.domain.DomainProductMapper;
+import ai.shreds.shared.ApplicationSharedProductDTO;
 import ai.shreds.domain.DomainCategoryRepositoryPort;
-import ai.shreds.application.dto.ApplicationSharedProductDTO;
-import ai.shreds.application.ApplicationCreateProductInputPort;
-import ai.shreds.application.ApplicationUpdateProductInputPort;
-import ai.shreds.application.ApplicationDeleteProductInputPort;
-import ai.shreds.application.ApplicationValidateCategoryInputPort;
+import ai.shreds.domain.DomainProductEntity;
+import ai.shreds.domain.DomainProductMapper;
+import ai.shreds.domain.DomainProductRepositoryPort;
 import lombok.RequiredArgsConstructor;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-import org.springframework.validation.annotation.Validated;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
 import java.math.BigDecimal;
-import java.util.UUID;
 import java.util.Optional;
+import java.util.UUID;
 
 @Service
-@Validated
 @RequiredArgsConstructor
 public class ApplicationProductService implements ApplicationCreateProductInputPort, ApplicationUpdateProductInputPort, ApplicationDeleteProductInputPort {
 
@@ -75,11 +70,9 @@ public class ApplicationProductService implements ApplicationCreateProductInputP
     @Override
     @Transactional
     public void deleteProduct(UUID id) {
-        Optional<DomainProductEntity> existingProduct = productRepository.findById(id);
-        existingProduct.ifPresent(product -> {
-            productRepository.deleteById(id);
-            logger.info("Product deleted: {}", id);
-        });
+        DomainProductEntity existingProduct = productRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("Product not found."));
+        productRepository.deleteById(id);
+        logger.info("Product deleted: {}", id);
     }
 
     private boolean validateCategoryExists(UUID categoryId) {

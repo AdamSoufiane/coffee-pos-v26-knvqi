@@ -36,10 +36,10 @@ public class AdapterProductController {
         try {
             boolean isCategoryValid = validateCategoryService.validateCategoryExists(request.getCategoryId().getValue());
             if (!isCategoryValid) {
-                return ResponseEntity.badRequest().body(new AdapterProductCreateResponse(null, null, null, null, null, null));
+                return ResponseEntity.badRequest().body(new AdapterProductCreateResponse(null, null, null, null, null, "Invalid category"));
             }
             if (request.getPrice().getValue().compareTo(BigDecimal.ZERO) <= 0) {
-                return ResponseEntity.badRequest().body(new AdapterProductCreateResponse(null, null, null, null, null, null));
+                return ResponseEntity.badRequest().body(new AdapterProductCreateResponse(null, null, null, null, null, "Invalid price"));
             }
             var productDTO = new ApplicationSharedProductDTO(
                     request.getName().getValue(),
@@ -55,11 +55,12 @@ public class AdapterProductController {
                     new SharedStringValueObject(createdProduct.getDescription()),
                     new SharedDecimalValueObject(createdProduct.getPrice()),
                     new SharedBooleanValueObject(createdProduct.getAvailability()),
-                    new SharedUUIDValueObject(createdProduct.getCategoryId())
+                    new SharedUUIDValueObject(createdProduct.getCategoryId()),
+                    "Product created successfully"
             );
             return ResponseEntity.ok(response);
         } catch (Exception e) {
-            return ResponseEntity.status(500).body(new AdapterProductCreateResponse(null, null, null, null, null, null));
+            return ResponseEntity.status(500).body(new AdapterProductCreateResponse(null, null, null, null, null, "Error occurred"));
         }
     }
 
@@ -89,7 +90,8 @@ public class AdapterProductController {
                             new SharedStringValueObject(updatedProduct.getDescription()),
                             new SharedDecimalValueObject(updatedProduct.getPrice()),
                             new SharedBooleanValueObject(updatedProduct.getAvailability()),
-                            new SharedUUIDValueObject(updatedProduct.getCategoryId())
+                            new SharedUUIDValueObject(updatedProduct.getCategoryId()),
+                            "Product updated successfully"
                     )
             );
             return ResponseEntity.ok(response);
