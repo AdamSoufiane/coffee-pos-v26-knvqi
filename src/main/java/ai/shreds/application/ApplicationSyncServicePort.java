@@ -1,7 +1,7 @@
 package ai.shreds.application;
 
-import ai.shreds.adapter.AdapterProductSyncRequestParams;
-import ai.shreds.adapter.AdapterProductSyncResponseDTO;
+import ai.shreds.shared.AdapterProductSyncRequestParams;
+import ai.shreds.shared.AdapterProductSyncResponseDTO;
 
 /**
  * Interface for synchronizing product data with the Menu Service.

@@ -14,7 +14,6 @@ import java.util.stream.Stream;
 import javax.validation.ConstraintViolationException;
 import org.springframework.context.support.DefaultMessageSourceResolvable;
 import javax.validation.ValidationException;
-import javax.validation.TransformationException;
 
 @Slf4j
 @ControllerAdvice

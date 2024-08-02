@@ -5,7 +5,7 @@ import ai.shreds.shared.AdapterProductSyncResponseDTO;
 import ai.shreds.domain.DomainProductDomainEntity;
 import ai.shreds.domain.DomainProductSyncServicePort;
 import ai.shreds.domain.DomainProductRepositoryPort;
-import ai.shreds.shared.AdapterMapper;
+import ai.shreds.adapter.AdapterMapper;
 lombok.RequiredArgsConstructor;
 lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;

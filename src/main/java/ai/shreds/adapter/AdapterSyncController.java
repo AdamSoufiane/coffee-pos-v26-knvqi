@@ -3,7 +3,6 @@ package ai.shreds.adapter;
 import ai.shreds.shared.AdapterRequestParam;
 import ai.shreds.shared.AdapterResponseDTO;
 import ai.shreds.application.ApplicationSyncServicePort;
-import ai.shreds.adapter.AdapterMapper;
 import ai.shreds.shared.ProductNotFoundException;
 import ai.shreds.shared.InvalidProductDataException;
 import lombok.extern.slf4j.Slf4j;

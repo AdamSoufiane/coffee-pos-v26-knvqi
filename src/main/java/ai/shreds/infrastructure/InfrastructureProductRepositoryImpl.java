@@ -2,17 +2,19 @@ package ai.shreds.infrastructure;
 
 import ai.shreds.domain.DomainProductDomainEntity;
 import ai.shreds.domain.DomainProductRepositoryPort;
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Table;
-import org.springframework.data.jpa.repository.JpaRepository;
+import ai.shreds.domain.ProductNotFoundException;
+import ai.shreds.domain.DatabaseOperationException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 import lombok.Data;
 import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
+import javax.persistence.Table;
 import java.util.Optional;
 import java.util.UUID;
 import java.math.BigDecimal;
@@ -65,9 +67,9 @@ public class InfrastructureProductRepositoryImpl implements DomainProductReposit
                     entity.getName(),
                     entity.getDescription(),
                     entity.getPrice(),
-                    entity.isAvailability(),
-                    entity.getCreatedAt(),
-                    entity.getUpdatedAt()
+                    entity.getAvailability(),
+                    entity.getCreated_at(),
+                    entity.getUpdated_at()
             );
             productJpaRepository.save(productEntity);
         } catch (Exception e) {

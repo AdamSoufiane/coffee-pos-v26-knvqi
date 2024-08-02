@@ -1,8 +1,8 @@
 package ai.shreds.adapter;
 
 import ai.shreds.application.ApplicationRealTimeUpdateServicePort;
-import ai.shreds.shared.AdapterMapper;
-import ai.shreds.adapter.AdapterRealTimeMessage;
+import ai.shreds.shared.AdapterRealTimeMessage;
+import ai.shreds.adapter.AdapterMapper;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

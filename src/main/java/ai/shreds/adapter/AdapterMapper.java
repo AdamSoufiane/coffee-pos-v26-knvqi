@@ -1,6 +1,6 @@
 package ai.shreds.adapter;
 
-import ai.shreds.domain.DomainProductDomainEntity;
+import ai.shreds.domain.DomainProductDTO;
 import ai.shreds.shared.AdapterRequestParam;
 import ai.shreds.shared.AdapterResponseDTO;
 import ai.shreds.shared.AdapterRealTimeMessage;
@@ -16,16 +16,16 @@ public interface AdapterMapper {
 
     @Mapping(target = "created_at", expression = "java(LocalDateTime.now())")
     @Mapping(target = "updated_at", expression = "java(LocalDateTime.now())")
-    DomainProductDomainEntity toDomainEntity(AdapterRequestParam dto);
+    DomainProductDTO toDomainEntity(AdapterRequestParam dto);
 
     @Mapping(target = "id", source = "entity.id")
     @Mapping(target = "name", source = "entity.name")
     @Mapping(target = "description", source = "entity.description")
     @Mapping(target = "price", source = "entity.price")
     @Mapping(target = "availability", source = "entity.availability")
-    AdapterResponseDTO toAdapterResponseDTO(DomainProductDomainEntity entity);
+    AdapterResponseDTO toAdapterResponseDTO(DomainProductDTO entity);
 
     @Mapping(target = "created_at", expression = "java(LocalDateTime.now())")
     @Mapping(target = "updated_at", expression = "java(LocalDateTime.now())")
-    DomainProductDomainEntity toDomainEntity(AdapterRealTimeMessage message);
+    DomainProductDTO toDomainEntity(AdapterRealTimeMessage message);
 }

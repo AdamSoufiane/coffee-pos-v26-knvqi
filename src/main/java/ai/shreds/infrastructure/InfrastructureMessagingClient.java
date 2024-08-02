@@ -2,8 +2,7 @@ package ai.shreds.infrastructure;
 
 import ai.shreds.domain.DomainProductDomainEntity;
 import ai.shreds.domain.DomainProductSyncServicePort;
-import java.math.BigDecimal;
-import lombok.RequiredArgsConstructor;
+lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
@@ -11,6 +10,7 @@ import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.retry.annotation.Backoff;
 import org.springframework.retry.annotation.Retryable;
 import org.springframework.stereotype.Service;
+import java.math.BigDecimal;
 
 @Service
 @RequiredArgsConstructor

@@ -2,11 +2,11 @@ package ai.shreds.application;
 
 import ai.shreds.shared.AdapterRealTimeUpdateRequest;
 import ai.shreds.shared.AdapterRealTimeUpdateResponse;
-import ai.shreds.adapter.AdapterProductDTO;
+import ai.shreds.shared.AdapterProductDTO;
 import ai.shreds.domain.DomainProductDomainEntity;
 import ai.shreds.domain.DomainProductSyncServicePort;
 import ai.shreds.domain.DomainProductRepositoryPort;
-import lombok.RequiredArgsConstructor;
+lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;

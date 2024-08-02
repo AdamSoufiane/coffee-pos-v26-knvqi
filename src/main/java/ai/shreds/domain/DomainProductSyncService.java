@@ -1,14 +1,15 @@
 package ai.shreds.domain;
 
 import ai.shreds.infrastructure.InfrastructureMessagingClient;
-import ai.shreds.domain.DomainProductRepositoryPort;
-import ai.shreds.domain.DomainProductDomainEntity;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 import java.math.BigDecimal;
 
-@RequiredArgsConstructor
+@Service
+@RequiredArgsConstructor(onConstructor = @__(@Autowired))
 public class DomainProductSyncService implements DomainProductSyncServicePort {
     private static final Logger logger = LoggerFactory.getLogger(DomainProductSyncService.class);
     private final DomainProductRepositoryPort domainProductRepositoryPort;
@@ -19,7 +20,7 @@ public class DomainProductSyncService implements DomainProductSyncServicePort {
         if (entity.getPrice().compareTo(BigDecimal.ZERO) <= 0) {
             throw new DomainProductValidationException("Price must be a positive value.");
         }
-        if (!entity.isAvailability()) {
+        if (!entity.getAvailability()) {
             throw new DomainProductValidationException("Product must be available.");
         }
         return true;

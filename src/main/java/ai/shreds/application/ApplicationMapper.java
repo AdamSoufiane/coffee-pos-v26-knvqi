@@ -1,8 +1,8 @@
 package ai.shreds.application;
 
-import ai.shreds.adapter.AdapterRequestParam;
-import ai.shreds.adapter.AdapterResponseDTO;
-import ai.shreds.adapter.AdapterRealTimeMessage;
+import ai.shreds.shared.AdapterRequestParam;
+import ai.shreds.shared.AdapterResponseDTO;
+import ai.shreds.shared.AdapterRealTimeMessage;
 import ai.shreds.domain.DomainProductDomainEntity;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;

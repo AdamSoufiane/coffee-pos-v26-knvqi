@@ -1,7 +1,7 @@
 package ai.shreds.application;
 
-import ai.shreds.adapter.AdapterRealTimeUpdateRequest;
-import ai.shreds.adapter.AdapterRealTimeUpdateResponse;
+import ai.shreds.shared.AdapterRealTimeUpdateRequest;
+import ai.shreds.shared.AdapterRealTimeUpdateResponse;
 
 /**
  * Interface for handling real-time updates of product data.
