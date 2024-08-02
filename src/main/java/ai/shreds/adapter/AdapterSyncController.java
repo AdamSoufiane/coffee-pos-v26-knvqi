@@ -4,6 +4,8 @@ import ai.shreds.shared.AdapterRequestParam;
 import ai.shreds.shared.AdapterResponseDTO;
 import ai.shreds.application.ApplicationSyncServicePort;
 import ai.shreds.adapter.AdapterMapper;
+import ai.shreds.shared.ProductNotFoundException;
+import ai.shreds.shared.InvalidProductDataException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -31,7 +33,7 @@ public class AdapterSyncController {
     public ResponseEntity<AdapterResponseDTO> syncProductData(@RequestBody AdapterRequestParam params) {
         try {
             var domainEntity = adapterMapper.toDomainEntity(params);
-            var response = applicationSyncServicePort.syncProductData(domainEntity);
+            var response = applicationSyncServicePort.syncProductData(params);
             var adapterResponse = adapterMapper.toAdapterResponseDTO(response);
             return ResponseEntity.ok(adapterResponse);
         } catch (IllegalArgumentException e) {

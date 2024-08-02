@@ -1,13 +1,13 @@
 package ai.shreds.application;
 
-import ai.shreds.adapter.AdapterProductSyncRequestParams;
-import ai.shreds.adapter.AdapterProductSyncResponseDTO;
+import ai.shreds.shared.AdapterProductSyncRequestParams;
+import ai.shreds.shared.AdapterProductSyncResponseDTO;
 import ai.shreds.domain.DomainProductDomainEntity;
 import ai.shreds.domain.DomainProductSyncServicePort;
 import ai.shreds.domain.DomainProductRepositoryPort;
 import ai.shreds.shared.AdapterMapper;
-import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
+lombok.RequiredArgsConstructor;
+lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 @Slf4j
@@ -36,6 +36,9 @@ public class ApplicationSyncService implements ApplicationSyncServicePort {
 
             // Transform domain entity if necessary
             DomainProductDomainEntity transformedEntity = domainProductSyncServicePort.transformProductData(domainEntity);
+
+            // Save the transformed entity
+            domainProductRepositoryPort.save(transformedEntity);
 
             // Send sync request
             domainProductSyncServicePort.sendSyncRequest(transformedEntity);

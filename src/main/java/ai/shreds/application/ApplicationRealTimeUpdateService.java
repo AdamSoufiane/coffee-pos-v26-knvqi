@@ -1,8 +1,8 @@
 package ai.shreds.application;
 
+import ai.shreds.shared.AdapterRealTimeUpdateRequest;
+import ai.shreds.shared.AdapterRealTimeUpdateResponse;
 import ai.shreds.adapter.AdapterProductDTO;
-import ai.shreds.adapter.AdapterRealTimeUpdateRequest;
-import ai.shreds.adapter.AdapterRealTimeUpdateResponse;
 import ai.shreds.domain.DomainProductDomainEntity;
 import ai.shreds.domain.DomainProductSyncServicePort;
 import ai.shreds.domain.DomainProductRepositoryPort;
@@ -22,7 +22,7 @@ public class ApplicationRealTimeUpdateService implements ApplicationRealTimeUpda
 
     @Override
     public AdapterRealTimeUpdateResponse handleRealTimeUpdate(AdapterRealTimeUpdateRequest request) {
-        if (request == null || request.getId() == null || request.getName() == null || request.getDescription() == null || request.getPrice() == null || request.isAvailability() == null) {
+        if (request == null || request.getId() == null || request.getName() == null || request.getDescription() == null || request.getPrice() == null || request.getAvailability() == null) {
             return new AdapterRealTimeUpdateResponse("Real-time update failed", new AdapterProductDTO(request.getId(), request.getName(), request.getDescription(), request.getPrice(), request.isAvailability()));
         }
 
@@ -40,7 +40,7 @@ public class ApplicationRealTimeUpdateService implements ApplicationRealTimeUpda
             );
 
             if (!domainProductSyncServicePort.validateProductData(domainEntity)) {
-                return new AdapterRealTimeUpdateResponse("Real-time update validation failed", new AdapterProductDTO(request.getId(), request.getName(), request.getDescription(), request.getPrice(), request.isAvailability()));
+                return new AdapterRealTimeUpdateResponse("Real-time update failed", new AdapterProductDTO(request.getId(), request.getName(), request.getDescription(), request.getPrice(), request.isAvailability()));
             }
 
             domainProductRepositoryPort.save(domainEntity);
@@ -60,7 +60,7 @@ public class ApplicationRealTimeUpdateService implements ApplicationRealTimeUpda
             return new AdapterRealTimeUpdateResponse("Real-time update successful", responseDTO);
         } catch (Exception e) {
             logger.error("Error handling real-time update for product ID: {}", request.getId(), e);
-            return new AdapterRealTimeUpdateResponse("Real-time update failed due to an error", new AdapterProductDTO(request.getId(), request.getName(), request.getDescription(), request.getPrice(), request.isAvailability()));
+            return new AdapterRealTimeUpdateResponse("Real-time update failed", new AdapterProductDTO(request.getId(), request.getName(), request.getDescription(), request.getPrice(), request.isAvailability()));
         }
     }
 }

@@ -6,9 +6,10 @@ import ai.shreds.shared.AdapterProductSyncRequestParams;
 import ai.shreds.shared.AdapterProductSyncResponseDTO;
 import ai.shreds.shared.AdapterRealTimeUpdateRequest;
 import ai.shreds.shared.AdapterRealTimeUpdateResponse;
-import lombok.RequiredArgsConstructor;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+lombok.RequiredArgsConstructor;
+lombok.NonNull;
+lombok.extern.slf4j.Slf4j;
+import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -19,43 +20,42 @@ import java.util.UUID;
 @RestController
 @RequestMapping("/sync")
 @RequiredArgsConstructor
+@Slf4j
 public class AdapterProductSyncController {
-
-    private static final Logger logger = LoggerFactory.getLogger(AdapterProductSyncController.class);
 
     private final ApplicationSyncServicePort applicationSyncServicePort;
     private final ApplicationRealTimeUpdateServicePort applicationRealTimeUpdateServicePort;
 
     @PostMapping
-    public AdapterProductSyncResponseDTO handleSyncRequest(@RequestBody AdapterProductSyncRequestParams params) {
+    public AdapterProductSyncResponseDTO handleSyncRequest(@RequestBody @NonNull AdapterProductSyncRequestParams params) {
         try {
             validateParams(params);
-            logger.info("Received sync request: {}", params);
+            log.info("Received sync request: {}", params);
             AdapterProductSyncResponseDTO response = applicationSyncServicePort.syncProductData(params);
-            logger.info("Sync response: {}", response);
+            log.info("Sync response: {}", response);
             return response;
         } catch (IllegalArgumentException e) {
-            logger.error("Validation error handling sync request", e);
+            log.error("Validation error handling sync request", e);
             return new AdapterProductSyncResponseDTO("Synchronization failed: " + e.getMessage(), null);
         } catch (Exception e) {
-            logger.error("Error handling sync request", e);
+            log.error("Error handling sync request", e);
             return new AdapterProductSyncResponseDTO("Synchronization failed: Internal server error", null);
         }
     }
 
     @PostMapping("/realtime-update")
-    public AdapterRealTimeUpdateResponse handleRealTimeUpdate(@RequestBody AdapterRealTimeUpdateRequest message) {
+    public AdapterRealTimeUpdateResponse handleRealTimeUpdate(@RequestBody @NonNull AdapterRealTimeUpdateRequest message) {
         try {
             validateMessage(message);
-            logger.info("Received real-time update message: {}", message);
+            log.info("Received real-time update message: {}", message);
             AdapterRealTimeUpdateResponse response = applicationRealTimeUpdateServicePort.handleRealTimeUpdate(message);
-            logger.info("Real-time update response: {}", response);
+            log.info("Real-time update response: {}", response);
             return response;
         } catch (IllegalArgumentException e) {
-            logger.error("Validation error handling real-time update", e);
+            log.error("Validation error handling real-time update", e);
             return new AdapterRealTimeUpdateResponse("Real-time update failed: " + e.getMessage(), null);
         } catch (Exception e) {
-            logger.error("Error handling real-time update", e);
+            log.error("Error handling real-time update", e);
             return new AdapterRealTimeUpdateResponse("Real-time update failed: Internal server error", null);
         }
     }
@@ -76,5 +76,17 @@ public class AdapterProductSyncController {
         if (message.getPrice().compareTo(BigDecimal.ZERO) <= 0) {
             throw new IllegalArgumentException("Invalid product data: Price must be a positive value");
         }
+    }
+
+    @ExceptionHandler
+    public AdapterProductSyncResponseDTO handleException(Exception e) {
+        log.error("An exception occurred: ", e);
+        return new AdapterProductSyncResponseDTO("Error occurred: " + e.getMessage(), null);
+    }
+
+    @ExceptionHandler
+    public AdapterRealTimeUpdateResponse handleException(Exception e) {
+        log.error("An exception occurred: ", e);
+        return new AdapterRealTimeUpdateResponse("Error occurred: " + e.getMessage(), null);
     }
 }

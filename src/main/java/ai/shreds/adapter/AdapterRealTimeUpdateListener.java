@@ -1,16 +1,16 @@
 package ai.shreds.adapter;
 
-import ai.shreds.shared.AdapterRealTimeMessage;
 import ai.shreds.application.ApplicationRealTimeUpdateServicePort;
 import ai.shreds.shared.AdapterMapper;
+import ai.shreds.adapter.AdapterRealTimeMessage;
 import lombok.RequiredArgsConstructor;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.amqp.rabbit.annotation.RabbitListener;
 import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.stereotype.Component;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import java.math.BigDecimal;
-import javax.validation.Valid;
+import javax.validation.constraints.NotNull;
 
 /**
  * Listener for handling real-time updates of product data using RabbitMQ/Kafka.
@@ -29,19 +29,18 @@ public class AdapterRealTimeUpdateListener {
      */
     @RabbitListener(queues = "product-update-queue")
     @KafkaListener(topics = "product-update-topic", groupId = "product-group")
-    public void handleRealTimeUpdate(@Valid AdapterRealTimeMessage message) {
+    public void handleRealTimeUpdate(AdapterRealTimeMessage message) {
         try {
             // Validate the incoming message
             if (isValidMessage(message)) {
                 var domainEntity = adapterMapper.toDomainEntity(message);
                 applicationRealTimeUpdateServicePort.handleRealTimeUpdate(domainEntity);
-                logger.info("Real-time update handled successfully: {}", message);
             } else {
-                logger.warn("Received invalid product data: {}", message);
+                logger.warn("Received invalid product data with message id: {}", message.getId());
             }
         } catch (Exception e) {
             // Log the exception and handle it appropriately
-            logger.error("Error handling real-time update: ", e);
+            logger.error("Error handling real-time update for message id: {}, ", message.getId(), e);
         }
     }
 
@@ -51,6 +50,6 @@ public class AdapterRealTimeUpdateListener {
      * @return true if the message is valid, false otherwise.
      */
     private boolean isValidMessage(AdapterRealTimeMessage message) {
-        return message.getId() != null && message.getName() != null && !message.getName().isEmpty() && message.getPrice() != null && message.getPrice().compareTo(BigDecimal.ZERO) > 0;
+        return message.getId() != null && message.getName() != null && !message.getName().isEmpty() && message.getDescription() != null && !message.getDescription().isEmpty() && message.getAvailability() != null && message.getPrice() != null && message.getPrice().compareTo(BigDecimal.ZERO) > 0;
     }
 }

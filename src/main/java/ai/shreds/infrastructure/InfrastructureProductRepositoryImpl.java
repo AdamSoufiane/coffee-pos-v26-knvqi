@@ -2,25 +2,21 @@ package ai.shreds.infrastructure;
 
 import ai.shreds.domain.DomainProductDomainEntity;
 import ai.shreds.domain.DomainProductRepositoryPort;
+import javax.persistence.Entity;
+import javax.persistence.Id;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Table;
+import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
-import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.transaction.annotation.Transactional;
 import lombok.Data;
 import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
-import lombok.Getter;
-import lombok.Setter;
-
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
-import javax.persistence.Table;
-import javax.persistence.Temporal;
-import javax.persistence.TemporalType;
-import java.math.BigDecimal;
-import java.sql.Timestamp;
 import java.util.Optional;
 import java.util.UUID;
+import java.math.BigDecimal;
+import java.sql.Timestamp;
 
 /**
  * Implementation of the DomainProductRepositoryPort interface.
@@ -60,6 +56,7 @@ public class InfrastructureProductRepositoryImpl implements DomainProductReposit
      * Saves or updates a product entity in the database.
      * @param entity the product entity to be saved or updated
      */
+    @Transactional
     @Override
     public void save(DomainProductDomainEntity entity) {
         try {
@@ -82,6 +79,7 @@ public class InfrastructureProductRepositoryImpl implements DomainProductReposit
      * Deletes a product from the database using its unique identifier (UUID).
      * @param id the unique identifier of the product
      */
+    @Transactional
     @Override
     public void deleteById(UUID id) {
         try {
@@ -102,8 +100,6 @@ interface ProductJpaRepository extends JpaRepository<ProductEntity, UUID> {}
 @NoArgsConstructor
 @Entity
 @Table(name = "products")
-@Getter
-@Setter
 class ProductEntity {
 
     @Id
@@ -118,10 +114,8 @@ class ProductEntity {
 
     private boolean availability;
 
-    @Temporal(TemporalType.TIMESTAMP)
     private Timestamp createdAt;
 
-    @Temporal(TemporalType.TIMESTAMP)
     private Timestamp updatedAt;
 }
 

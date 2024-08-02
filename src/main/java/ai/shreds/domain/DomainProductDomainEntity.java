@@ -1,14 +1,22 @@
 package ai.shreds.domain;
 
-import java.math.BigDecimal;
-import java.sql.Timestamp;
-import java.util.UUID;
-import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Size;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
+import javax.persistence.Table;
+import javax.persistence.Column;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
+import java.math.BigDecimal;
+import java.sql.Timestamp;
+import java.util.UUID;
 
 /**
  * Represents a product in the domain layer.
@@ -18,20 +26,31 @@ import lombok.NoArgsConstructor;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
+@Entity
+@Table(name = "products")
 public class DomainProductDomainEntity {
-    @NotNull
+    @Id
+    @GeneratedValue
     private UUID id;
+
     @NotNull
     @Size(min = 1)
     private String name;
+
     @NotNull
     @Size(min = 1)
     private String description;
+
     @NotNull
     private BigDecimal price;
+
     @NotNull
     private Boolean availability;
+
+    @Temporal(TemporalType.TIMESTAMP)
     private Timestamp created_at;
+
+    @Temporal(TemporalType.TIMESTAMP)
     private Timestamp updated_at;
 
     /**
@@ -52,15 +71,5 @@ public class DomainProductDomainEntity {
         if (availability == null) {
             throw new DomainProductValidationException("Availability cannot be null.");
         }
-    }
-
-    /**
-     * Transforms the product data into the format required by the Menu Service.
-     *
-     * @return the transformed product data.
-     */
-    public DomainProductDomainEntity transformProductData() {
-        // Transformation logic here, if needed
-        return this;
     }
 }
