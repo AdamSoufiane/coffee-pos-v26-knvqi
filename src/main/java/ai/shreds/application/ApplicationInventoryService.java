@@ -2,6 +2,7 @@ package ai.shreds.application;
 
 import ai.shreds.domain.DomainInventoryRepositoryPort;
 import ai.shreds.shared.SharedInventoryDTO;
+import ai.shreds.domain.NotFoundException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -16,31 +17,27 @@ public class ApplicationInventoryService implements ApplicationStoreInventoryInp
     @Override
     public void storeInventoryData(SharedInventoryDTO inventory) {
         try {
-            // Validate the inventory data
             validateInventoryItem(inventory);
-            // Save the inventory data to the repository
             domainInventoryRepositoryPort.save(inventory);
             log.info("Inventory data stored successfully for ID: {}", inventory.getId());
         } catch (Exception e) {
             log.error("Failed to store inventory data for ID: {}", inventory.getId(), e);
-            throw new RuntimeException(e);
+            throw e;
         }
     }
 
     @Override
     public SharedInventoryDTO retrieveInventoryData(String id) {
         try {
-            // Validate the ID
             if (id == null || id.isEmpty()) {
                 throw new IllegalArgumentException("Invalid ID");
             }
-            // Retrieve the inventory data from the repository
-            SharedInventoryDTO inventory = domainInventoryRepositoryPort.findById(id);
+            SharedInventoryDTO inventory = domainInventoryRepositoryPort.findById(id).orElseThrow(() -> new NotFoundException("Inventory item not found for ID: " + id));
             log.info("Inventory data retrieved successfully for ID: {}", id);
             return inventory;
         } catch (Exception e) {
             log.error("Failed to retrieve inventory data for ID: {}", id, e);
-            throw new RuntimeException(e);
+            throw e;
         }
     }
 

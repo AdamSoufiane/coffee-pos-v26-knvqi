@@ -3,6 +3,7 @@ package ai.shreds.domain;
 import ai.shreds.shared.SharedInventoryDTO;
 import org.springframework.stereotype.Service;
 import lombok.RequiredArgsConstructor;
+import java.util.Optional;
 
 /**
  * Service class for managing inventory data.
@@ -34,40 +35,31 @@ public class DomainInventoryService implements DomainInventoryRepositoryPort {
      * @throws InventoryNotFoundException if the inventory item is not found
      */
     @Override
-    public SharedInventoryDTO findById(String id) {
+    public Optional<SharedInventoryDTO> findById(String id) {
         // Validate the ID
         if (id == null || id.isEmpty()) {
-            throw new IllegalArgumentException("ID cannot be null or empty");
+            throw new IllegalArgumentException("ID must not be null or empty");
         }
-        // Retrieve the inventory item from the repository
-        SharedInventoryDTO inventoryItem = inventoryRepository.findById(id);
-        if (inventoryItem == null) {
-            throw new InventoryNotFoundException("Inventory item not found for ID: " + id);
-        }
-        return inventoryItem;
+        return inventoryRepository.findById(id);
     }
 
+    /**
+     * Validates the given inventory item.
+     *
+     * @param inventory the inventory item to validate
+     */
     private void validateInventoryItem(SharedInventoryDTO inventory) {
         if (inventory.getId() == null || inventory.getId().isEmpty()) {
-            throw new IllegalArgumentException("Inventory ID cannot be null or empty");
+            throw new IllegalArgumentException("Inventory item must have a unique identifier");
         }
         if (inventory.getName() == null || inventory.getName().isEmpty()) {
-            throw new IllegalArgumentException("Inventory name cannot be null or empty");
+            throw new IllegalArgumentException("The name of the inventory item must not be empty");
         }
         if (inventory.getQuantity() < 0) {
-            throw new IllegalArgumentException("Inventory quantity cannot be negative");
+            throw new IllegalArgumentException("The quantity of the inventory item must be a non-negative integer");
         }
         if (inventory.getThreshold() < 0) {
-            throw new IllegalArgumentException("Inventory threshold cannot be negative");
+            throw new IllegalArgumentException("The threshold must be a non-negative integer");
         }
-    }
-}
-
-/**
- * Custom exception class for handling inventory not found scenarios.
- */
-class InventoryNotFoundException extends RuntimeException {
-    public InventoryNotFoundException(String message) {
-        super(message);
     }
 }

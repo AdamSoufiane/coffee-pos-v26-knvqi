@@ -2,18 +2,11 @@ package ai.shreds.adapter;
 
 import ai.shreds.application.ApplicationRetrieveInventoryOutputPort;
 import ai.shreds.application.ApplicationStoreInventoryInputPort;
-import ai.shreds.shared.AdapterInventoryRetrieveRequest;
-import ai.shreds.shared.AdapterInventoryResponse;
-import ai.shreds.shared.AdapterInventoryStoreRequest;
 import ai.shreds.shared.SharedInventoryDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.context.request.WebRequest;
-import org.springframework.web.bind.annotation.ControllerAdvice;
-import org.springframework.web.bind.annotation.ExceptionHandler;
-import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -57,22 +50,5 @@ public class AdapterInventoryController {
         AdapterInventoryResponse response = new AdapterInventoryResponse(inventoryDTO.getId(), inventoryDTO.getName(), inventoryDTO.getQuantity(), inventoryDTO.getThreshold());
         logger.info("Successfully retrieved inventory data: {}", response);
         return ResponseEntity.status(HttpStatus.OK).body(response);
-    }
-}
-
-@ControllerAdvice
-class AdapterInventoryControllerException {
-    private static final Logger logger = LoggerFactory.getLogger(AdapterInventoryControllerException.class);
-
-    @ExceptionHandler(IllegalArgumentException.class)
-    public final ResponseEntity<?> handleIllegalArgumentException(IllegalArgumentException ex, WebRequest request) {
-        logger.error("Handling IllegalArgumentException: {}", ex.getMessage());
-        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("{\"error\":\"Invalid input data.\", \"details\":\"" + ex.getMessage() + "\"}");
-    }
-
-    @ExceptionHandler(Exception.class)
-    public final ResponseEntity<?> handleAllExceptions(Exception ex, WebRequest request) {
-        logger.error("Handling Exception: {}", ex.getMessage());
-        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("{\"error\":\"Failed to process request.\", \"details\":\"" + ex.getMessage() + "\"}");
     }
 }

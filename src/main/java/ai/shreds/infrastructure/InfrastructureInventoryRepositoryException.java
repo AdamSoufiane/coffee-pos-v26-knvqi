@@ -35,3 +35,9 @@ public class InfrastructureInventoryRepositoryException {
         }
     }
 }
+
+class CustomInfrastructureException extends RuntimeException {
+    public CustomInfrastructureException(String message, Throwable cause) {
+        super(message, cause);
+    }
+}
