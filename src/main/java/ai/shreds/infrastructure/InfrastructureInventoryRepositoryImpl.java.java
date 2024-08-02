@@ -1,8 +1,8 @@
 package ai.shreds.infrastructure;
 
 import ai.shreds.domain.DomainInventoryItemEntity;
+import ai.shreds.domain.DomainInventoryItemNotFoundException;
 import ai.shreds.domain.DomainInventoryRepositoryPort;
-import ai.shreds.domain.exception.DomainInventoryItemNotFoundException;
 import ai.shreds.domain.DomainInventoryItemAlreadyExistsException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

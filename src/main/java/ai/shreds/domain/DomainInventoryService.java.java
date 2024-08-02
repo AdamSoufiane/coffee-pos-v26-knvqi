@@ -1,12 +1,9 @@
 package ai.shreds.domain;
 
-import ai.shreds.domain.DomainInventoryItemAlreadyExistsException;
-import ai.shreds.domain.DomainInventoryItemQuantityException;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
-
 import java.util.List;
 import java.util.Optional;
 
@@ -41,7 +38,7 @@ public class DomainInventoryService {
     private void validateNameUniqueness(DomainInventoryItemEntity item) throws DomainInventoryItemAlreadyExistsException {
         List<DomainInventoryItemEntity> allItems = repository.findAll();
         Optional<DomainInventoryItemEntity> existingItem = allItems.stream()
-                .filter(i -> i.getName().equals(item.getName()) && (item.getId() == null || !i.getId().equals(item.getId())))
+                .filter(i -> i.getName().equals(item.getName()) && !i.getId().equals(item.getId()))
                 .findFirst();
         if (existingItem.isPresent()) {
             logger.error("Inventory item with name {} already exists", item.getName());
@@ -59,6 +56,19 @@ public class DomainInventoryService {
         if (item.getQuantity() < 0 || item.getThreshold() < 0) {
             logger.error("Inventory item quantity or threshold is negative for item: {}", item);
             throw new DomainInventoryItemQuantityException(item.getQuantity(), item.getThreshold());
+        }
+    }
+
+    /**
+     * Checks if the quantity of the inventory item is below the threshold.
+     *
+     * @param entity the inventory item to check
+     * @throws DomainInventoryItemQuantityException if the quantity is below the threshold
+     */
+    public void checkThreshold(DomainInventoryItemEntity entity) throws DomainInventoryItemQuantityException {
+        if (entity.getQuantity() < entity.getThreshold()) {
+            logger.error("Inventory item quantity {} is below the threshold {} for item: {}", entity.getQuantity(), entity.getThreshold(), entity);
+            throw new DomainInventoryItemQuantityException(entity.getQuantity(), entity.getThreshold());
         }
     }
 }

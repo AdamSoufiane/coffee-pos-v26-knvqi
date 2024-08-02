@@ -1,7 +1,16 @@
 package ai.shreds.adapter;
 
 import ai.shreds.application.ApplicationInventoryServicePort;
-import ai.shreds.shared.*;
+import ai.shreds.adapter.AdapterInventoryAddRequestParams;
+import ai.shreds.adapter.AdapterInventoryAddResponse;
+import ai.shreds.adapter.AdapterInventoryUpdateRequestParams;
+import ai.shreds.adapter.AdapterInventoryUpdateResponse;
+import ai.shreds.adapter.AdapterInventoryDeleteRequestParams;
+import ai.shreds.adapter.AdapterInventoryDeleteResponse;
+import ai.shreds.adapter.AdapterInventoryGetRequestParams;
+import ai.shreds.adapter.AdapterInventoryGetResponse;
+import shared.AdapterInventoryListRequestParams;
+import ai.shreds.adapter.AdapterInventoryListResponse;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.slf4j.Logger;
@@ -22,9 +31,6 @@ public class AdapterInventoryController {
         try {
             AdapterInventoryAddResponse response = inventoryService.addInventoryItem(requestParams);
             return ResponseEntity.status(201).body(response);
-        } catch (InvalidInputException e) {
-            logger.error("Invalid input: ", e);
-            return ResponseEntity.status(400).body(new AdapterInventoryAddResponse("Invalid input", null));
         } catch (Exception e) {
             logger.error("Unexpected error: ", e);
             return ResponseEntity.status(500).body(new AdapterInventoryAddResponse("Internal server error", null));
@@ -34,14 +40,8 @@ public class AdapterInventoryController {
     @PutMapping("/{id}")
     public ResponseEntity<AdapterInventoryUpdateResponse> updateInventoryItem(@PathVariable("id") String id, @RequestBody AdapterInventoryUpdateRequestParams requestParams) {
         try {
-            AdapterInventoryUpdateResponse response = inventoryService.updateInventoryItem(id, requestParams);
+            AdapterInventoryUpdateResponse response = inventoryService.updateInventoryItem(UUID.fromString(id), requestParams);
             return ResponseEntity.ok(response);
-        } catch (ItemNotFoundException e) {
-            logger.error("Item not found: ", e);
-            return ResponseEntity.status(404).body(new AdapterInventoryUpdateResponse("Item not found", null));
-        } catch (InvalidInputException e) {
-            logger.error("Invalid input: ", e);
-            return ResponseEntity.status(400).body(new AdapterInventoryUpdateResponse("Invalid input", null));
         } catch (Exception e) {
             logger.error("Unexpected error: ", e);
             return ResponseEntity.status(500).body(new AdapterInventoryUpdateResponse("Internal server error", null));
@@ -51,14 +51,8 @@ public class AdapterInventoryController {
     @DeleteMapping("/{id}")
     public ResponseEntity<AdapterInventoryDeleteResponse> deleteInventoryItem(@PathVariable("id") String id) {
         try {
-            AdapterInventoryDeleteResponse response = inventoryService.deleteInventoryItem(id);
+            AdapterInventoryDeleteResponse response = inventoryService.deleteInventoryItem(UUID.fromString(id));
             return ResponseEntity.ok(response);
-        } catch (ItemNotFoundException e) {
-            logger.error("Item not found: ", e);
-            return ResponseEntity.status(404).body(new AdapterInventoryDeleteResponse("Item not found"));
-        } catch (InvalidInputException e) {
-            logger.error("Invalid input: ", e);
-            return ResponseEntity.status(400).body(new AdapterInventoryDeleteResponse("Invalid input"));
         } catch (Exception e) {
             logger.error("Unexpected error: ", e);
             return ResponseEntity.status(500).body(new AdapterInventoryDeleteResponse("Internal server error"));
@@ -68,14 +62,8 @@ public class AdapterInventoryController {
     @GetMapping("/{id}")
     public ResponseEntity<AdapterInventoryGetResponse> getInventoryItem(@PathVariable("id") String id) {
         try {
-            AdapterInventoryGetResponse response = inventoryService.getInventoryItem(id);
+            AdapterInventoryGetResponse response = inventoryService.getInventoryItem(UUID.fromString(id));
             return ResponseEntity.ok(response);
-        } catch (ItemNotFoundException e) {
-            logger.error("Item not found: ", e);
-            return ResponseEntity.status(404).body(new AdapterInventoryGetResponse(null));
-        } catch (InvalidInputException e) {
-            logger.error("Invalid input: ", e);
-            return ResponseEntity.status(400).body(new AdapterInventoryGetResponse(null));
         } catch (Exception e) {
             logger.error("Unexpected error: ", e);
             return ResponseEntity.status(500).body(new AdapterInventoryGetResponse(null));

@@ -2,10 +2,10 @@ package ai.shreds.domain;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.bson.types.ObjectId;
-import ai.shreds.core.exceptions.DomainInventoryItemNotFoundException;
-import ai.shreds.core.exceptions.DomainInventoryItemAlreadyExistsException;
-import ai.shreds.core.exceptions.DomainInventoryItemQuantityException;
+import java.util.UUID;
+import ai.shreds.domain.exception.DomainInventoryItemNotFoundException;
+import ai.shreds.domain.DomainInventoryItemAlreadyExistsException;
+import ai.shreds.domain.DomainInventoryItemQuantityException;
 
 public class DomainInventoryServiceException {
     private static final Logger logger = LoggerFactory.getLogger(DomainInventoryServiceException.class);
@@ -23,9 +23,9 @@ public class DomainInventoryServiceException {
      * Handles not found exceptions for inventory items.
      * @param id The ID of the inventory item that was not found.
      */
-    public void handleException(ObjectId id) {
+    public void handleException(UUID id) {
         String message = "Inventory item with id " + id + " not found.";
-        logger.error("An error occurred in handleException(ObjectId): {}", message);
+        logger.error("An error occurred in handleException(UUID): {}", message);
         throw new DomainInventoryItemNotFoundException(message);
     }
 
@@ -47,6 +47,6 @@ public class DomainInventoryServiceException {
     public void handleException(Integer quantity, Integer threshold) {
         String message = "Inventory item quantity " + quantity + " is below the threshold " + threshold + ".";
         logger.error("An error occurred in handleException(Integer, Integer): {}", message);
-        throw new DomainInventoryItemQuantityException(message);
+        throw new DomainInventoryItemQuantityException(quantity, threshold);
     }
 }

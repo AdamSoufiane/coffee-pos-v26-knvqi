@@ -1,31 +1,29 @@
 package ai.shreds.application;
 
-import ai.shreds.adapter.*;
+import shared.AdapterInventoryAddRequestParams;
+import shared.AdapterInventoryAddResponse;
+import shared.AdapterInventoryDeleteResponse;
+import shared.AdapterInventoryGetResponse;
+import shared.AdapterInventoryItemDTO;
+import shared.AdapterInventoryListResponse;
+import shared.AdapterInventoryUpdateResponse;
 import ai.shreds.domain.*;
-import ai.shreds.shared.AdapterInventoryItemDTO;
-import org.bson.types.ObjectId;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
+import lombok.AllArgsConstructor;
 import java.util.List;
+import java.util.Optional;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 /**
  * Service implementation for managing inventory items.
  */
 @Service
+@AllArgsConstructor
 public class ApplicationInventoryServiceImpl implements ApplicationInventoryServicePort {
 
-    @Autowired
     private final DomainInventoryService domainService;
-
-    @Autowired
     private final DomainInventoryRepositoryPort repositoryPort;
-
-    public ApplicationInventoryServiceImpl(DomainInventoryService domainService, DomainInventoryRepositoryPort repositoryPort) {
-        this.domainService = domainService;
-        this.repositoryPort = repositoryPort;
-    }
 
     /**
      * Adds a new inventory item.
@@ -49,10 +47,10 @@ public class ApplicationInventoryServiceImpl implements ApplicationInventoryServ
      * @return the response containing the updated inventory item
      */
     @Override
-    public AdapterInventoryUpdateResponse updateInventoryItem(ObjectId id, AdapterInventoryUpdateRequestParams params) {
+    public AdapterInventoryUpdateResponse updateInventoryItem(UUID id, AdapterInventoryUpdateRequestParams params) {
         DomainInventoryItemEntity entity = repositoryPort.findById(id);
         if (entity == null) {
-            throw new DomainInventoryItemNotFoundException("Item not found with id: " + id);
+            return null;
         }
         entity.setName(params.getName());
         entity.setQuantity(params.getQuantity());
@@ -70,12 +68,9 @@ public class ApplicationInventoryServiceImpl implements ApplicationInventoryServ
      * @return the response indicating the deletion status
      */
     @Override
-    public AdapterInventoryDeleteResponse deleteInventoryItem(ObjectId id) {
-        DomainInventoryItemEntity entity = repositoryPort.findById(id);
-        if (entity == null) {
-            throw new DomainInventoryItemNotFoundException("Item not found with id: " + id);
-        }
-        repositoryPort.deleteById(id);
+    public AdapterInventoryDeleteResponse deleteInventoryItem(UUID id) {
+        Optional<DomainInventoryItemEntity> entity = Optional.ofNullable(repositoryPort.findById(id));
+        entity.ifPresent(repositoryPort::deleteById);
         return new AdapterInventoryDeleteResponse("Item deleted successfully");
     }
 
@@ -85,10 +80,10 @@ public class ApplicationInventoryServiceImpl implements ApplicationInventoryServ
      * @return the response containing the inventory item details
      */
     @Override
-    public AdapterInventoryGetResponse getInventoryItem(ObjectId id) {
+    public AdapterInventoryGetResponse getInventoryItem(UUID id) {
         DomainInventoryItemEntity entity = repositoryPort.findById(id);
         if (entity == null) {
-            throw new DomainInventoryItemNotFoundException("Item not found with id: " + id);
+            return null;
         }
         AdapterInventoryItemDTO itemDTO = new AdapterInventoryItemDTO(entity.getId(), entity.getName(), entity.getQuantity(), entity.getThreshold());
         return new AdapterInventoryGetResponse(itemDTO);
@@ -104,6 +99,6 @@ public class ApplicationInventoryServiceImpl implements ApplicationInventoryServ
         List<AdapterInventoryItemDTO> itemDTOs = entities.stream()
                 .map(entity -> new AdapterInventoryItemDTO(entity.getId(), entity.getName(), entity.getQuantity(), entity.getThreshold()))
                 .collect(Collectors.toList());
-        return new AdapterInventoryListResponse(itemDTOs);
+        return new AdapterInventoryListResponse(itemDTOs.isEmpty() ? List.of() : itemDTOs);
     }
 }
